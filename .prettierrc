@@ -1,0 +1,28 @@
+{
+  "printWidth": 100,
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "auto",
+  "importOrder": [
+    "^react$",
+    "^@core/(.*)$",
+    "^routes$",
+    "^hooks/(.*)$",
+    "^components$",
+    "^theme$",
+    "^./assets/(.*)$",
+    "^images/(.*)$",
+    "^fonts/(.*)$",
+    "^icons/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "pluginSearchDirs": false,
+  "plugins": ["prettier", "prettier-plugin-tailwindcss"]
+}
