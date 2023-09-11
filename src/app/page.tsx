@@ -1,28 +1,15 @@
 'use client';
 import { TitleHeader } from '@/components/TitleHeader/index';
 import Image from 'next/image';
-import { Howl } from 'howler';
 import { GiSoundOn, GiSoundOff } from 'react-icons/gi';
 import { Button, InputLabel } from '../components';
-import { useEffect, useState } from 'react';
-const sound = new Howl({
-  src: ['./sounds/title.mp3'],
-  loop: true,
-  volume: 0.5,
-  preload: true,
-});
-export default function Home() {
-  const [isPlaying, setIsPlaying] = useState(true);
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { useSoundBackground } from '@/hooks/useSoundBackground';
 
-  function handleToogleAudio() {
-    if (sound.playing()) {
-      sound.pause();
-      setIsPlaying(true);
-    } else {
-      sound.play();
-      setIsPlaying(false);
-    }
-  }
+export default function Home() {
+  const { handleToogleAudio, isPlaying } = useSoundBackground();
+
   useEffect(() => {
     handleToogleAudio();
   }, []);
@@ -45,13 +32,15 @@ export default function Home() {
 
           <footer className='flex justify-end border-t border-zinc-400 bg-gradient-to-b from-blue-100/80 to-transparent bg-line bg-repeat-y p-1'>
             <div className='flex gap-2'>
-              <Button>Login</Button>
+              <Link href='/character/initial'>
+                <Button>Login</Button>
+              </Link>
               <Button>Exit</Button>
             </div>
           </footer>
         </form>
         <button
-          className='absolute bottom-2 right-2 flex items-center justify-center rounded-full bg-blue-100 p-2 text-5xl text-sky-600 shadow-inner shadow-blue-500/80'
+          className='absolute bottom-2 right-2 flex cursor-pointer items-center justify-center rounded-full bg-blue-100 p-2 text-5xl text-sky-600 shadow-inner shadow-blue-500/80'
           onClick={handleToogleAudio}
         >
           {isPlaying ? <GiSoundOn /> : <GiSoundOff />}
