@@ -133,22 +133,19 @@ export default function Training() {
               }`}
               onClick={handleAttack}
             >
-              <Image
+              {/* <Image
                 src='http://db.irowiki.org/image/monster/1002.png'
                 alt='ground'
                 width={80}
                 height={80}
-              />
+              /> */}
+              <img src='/img/monsters/1002-poring.png' alt='ground' />
               {animacaoAtiva.map(square => (
                 <div
                   key={square.id}
-                  className='lef absolute animate-damage'
-                  style={{
-                    left: '100px',
-                    top: '300px',
-                  }}
+                  className={`${vt323.className} absolute -top-10 animate-damage text-6xl font-black text-white`}
                 >
-                  damage
+                  5
                 </div>
               ))}
               <div>
