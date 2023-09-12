@@ -19,21 +19,34 @@ const config: Config = {
       },
       keyframes: {
         death: {
+          '0%': {
+            transform: 'translateY(0px)',
+            opacity: '1',
+            'pointer-events': 'none',
+          },
+          '100%': {
+            transform: 'translateY(-200px)',
+            opacity: '0',
+            filter: 'blur(30px)',
+            'pointer-events': 'auto',
+          },
+        },
+        damage: {
           from: {
-            transform: 'rotate(0deg) translateY(0px)',
+            transform: 'translateY(0px)',
             opacity: '1',
             'pointer-events': 'none',
           },
           to: {
-            transform: 'rotate(20deg) translateY(-200px)',
+            transform: 'translateY(-200px)',
             opacity: '0',
-            filter: 'blur(30px)',
             'pointer-events': 'auto',
           },
         },
       },
       animation: {
         death: 'death 0.4s ease-in-out',
+        damage: 'damage 0.4s ease-in-out both',
       },
       cursor: {
         pointer: 'url(/img/cursor/pointer.webp), pointer',

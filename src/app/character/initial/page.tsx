@@ -3,11 +3,11 @@
 import { Button, SetCharacterStatus, InputLabel, TitleHeader } from '@/components/index';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
-
 import { useCharacters } from '@/hooks/useCharacters';
+
 export default function CharacterInitial() {
   const [isMancharacterSelected, SetIsMancharacterSelected] = useState(true);
   const [totalPoints, setTotalPoints] = useState(10);
@@ -16,9 +16,16 @@ export default function CharacterInitial() {
   }
   const router = useRouter();
   const { NUMBER_OF_CHARACTERS } = useCharacters();
-  if (NUMBER_OF_CHARACTERS >= 1) {
+
+  function redirect() {
     router.push('/character/select');
   }
+
+  useEffect(() => {
+    if (NUMBER_OF_CHARACTERS >= 1) {
+      redirect();
+    }
+  }, [NUMBER_OF_CHARACTERS]);
 
   return NUMBER_OF_CHARACTERS >= 1 ? (
     <main className='relative flex h-screen w-full items-center justify-center bg-background-home bg-cover'>
