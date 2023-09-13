@@ -4,17 +4,17 @@ import { CharacterStatusBar } from '@/components';
 import { Window } from '@/components/Window/intex';
 import { useMapSounds } from '@/hooks/useMapSounds';
 import { useSoundBackground } from '@/hooks/useSoundBackground';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useCharactersHitsSounds } from '@/hooks/useCharactersHitsSounds';
 import { MonsterRenderer } from '@/components/MonsterRenderer';
 import { Poring } from '@/monsters/poring';
+import { Fabre } from '@/monsters/Fabre';
+import { Character } from '@/entities/Character';
 
 export default function Training() {
   const { initialMap } = useMapSounds();
   const { sound } = useSoundBackground();
-  const { hand1 } = useCharactersHitsSounds();
   const [staps, setStaps] = useState(0);
+  const character: Character = new Character({ hit: 10, aspd: 99 });
   useEffect(() => {
     sound.stop();
     if (initialMap.playing()) return;
@@ -23,13 +23,13 @@ export default function Training() {
 
   return (
     <main className='relative flex h-screen w-full select-none'>
-      <Image src='/img/maps/traning.png' alt='ground' layout='fill' className='z-0 scale-150' />
+      <img src='/img/maps/traning.png' alt='ground' className='z-0 scale-150' />
       {staps === 0 && (
         <>
           <div className='absolute bottom-0 z-0 h-[300px] w-full bg-black opacity-50' />
           <div className='absolute bottom-0 z-10 flex h-[300px] w-full items-center justify-center px-[120px]'>
             <div className='absolute -top-20 left-20 z-30 h-48 w-48'>
-              <Image src='/img/characters/poringNatal.png' alt='ground' layout='fill' />
+              <img src='/img/characters/poringNatal.png' alt='ground' />
             </div>
             <div className='absolute left-[300px] top-3 z-30 w-48'>
               <p className='text-xl font-bold text-white'>PoringLover</p>
@@ -79,7 +79,8 @@ export default function Training() {
             </Window.Footer>
           </Window.Root>
           <div className='absolute left-1/2 top-1/2 z-10'>
-            <MonsterRenderer monster={new Poring()} userAttack={{ damage: 5, sound: hand1 }} />
+            <MonsterRenderer monster={new Poring()} character={character} />
+            <MonsterRenderer monster={new Fabre()} character={character} />
           </div>
         </>
       )}
