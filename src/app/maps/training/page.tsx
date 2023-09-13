@@ -6,69 +6,21 @@ import { useMapSounds } from '@/hooks/useMapSounds';
 import { useSoundBackground } from '@/hooks/useSoundBackground';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useMonstersSounds } from './context/useMonstersSounds';
 import { useCharactersHitsSounds } from '@/hooks/useCharactersHitsSounds';
-import { VT323 } from 'next/font/google';
-
-const vt323 = VT323({ weight: '400', subsets: ['latin'] });
-
-interface AnimacaoAtiva {
-  x: number;
-  y: number;
-  id: number;
-}
+import { MonsterRenderer } from '@/components/MonsterRenderer';
+import { Poring } from '@/monsters/poring';
 
 export default function Training() {
   const { initialMap } = useMapSounds();
   const { sound } = useSoundBackground();
-  const { poringDamage, portigDie } = useMonstersSounds();
   const { hand1 } = useCharactersHitsSounds();
   const [staps, setStaps] = useState(0);
-  const [animacaoAtiva, setAnimacaoAtiva] = useState<AnimacaoAtiva[]>([]);
-
-  const handleClick = (clientX: number, clientY: number) => {
-    const x = clientX;
-    const y = clientY;
-
-    const newSquare = {
-      x,
-      y,
-      id: Date.now(),
-    };
-
-    monsterStatus.hp == monsterStatus.totalHp
-      ? setAnimacaoAtiva([newSquare])
-      : setAnimacaoAtiva([...animacaoAtiva, newSquare]);
-  };
-  const [monsterStatus, setMonsterStatus] = useState({
-    hp: 27,
-    sp: 50,
-    totalHp: 27,
-  });
-
   useEffect(() => {
     sound.stop();
     if (initialMap.playing()) return;
     initialMap.play();
   }, []);
 
-  function handleAttack(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    handleClick(e.clientX, e.clientY);
-    hand1.play();
-    poringDamage.play();
-    setMonsterStatus({
-      ...monsterStatus,
-      hp: monsterStatus.hp - 5,
-    });
-
-    if (monsterStatus.hp <= 5) {
-      setMonsterStatus({
-        ...monsterStatus,
-        hp: monsterStatus.totalHp,
-      });
-      portigDie.play();
-    }
-  }
   return (
     <main className='relative flex h-screen w-full select-none'>
       <Image src='/img/maps/traning.png' alt='ground' layout='fill' className='z-0 scale-150' />
@@ -127,35 +79,7 @@ export default function Training() {
             </Window.Footer>
           </Window.Root>
           <div className='absolute left-1/2 top-1/2 z-10'>
-            <div
-              className={`relative flex cursor-attack select-none flex-col items-center gap-2 rounded-full p-10 ${
-                portigDie.playing() && 'animate-death'
-              }`}
-              onClick={handleAttack}
-            >
-              {/* <Image
-                src='http://db.irowiki.org/image/monster/1002.png'
-                alt='ground'
-                width={80}
-                height={80}
-              /> */}
-              <img src='/img/monsters/1002-poring.png' alt='ground' />
-              {animacaoAtiva.map(square => (
-                <div
-                  key={square.id}
-                  className={`${vt323.className} absolute -top-10 animate-damage text-6xl font-black text-white`}
-                >
-                  5
-                </div>
-              ))}
-              <div>
-                <CharacterStatusBar
-                  currentValue={monsterStatus.hp}
-                  maxValue={monsterStatus.totalHp}
-                  type='enemy'
-                />
-              </div>
-            </div>
+            <MonsterRenderer monster={new Poring()} userAttack={{ damage: 5, sound: hand1 }} />
           </div>
         </>
       )}
