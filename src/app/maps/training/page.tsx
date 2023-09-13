@@ -14,7 +14,7 @@ export default function Training() {
   const { initialMap } = useMapSounds();
   const { sound } = useSoundBackground();
   const [staps, setStaps] = useState(0);
-  const character: Character = new Character({ hit: 10, aspd: 99 });
+  const character: Character = new Character({ hit: 10, aspd: 5 });
   useEffect(() => {
     sound.stop();
     if (initialMap.playing()) return;
