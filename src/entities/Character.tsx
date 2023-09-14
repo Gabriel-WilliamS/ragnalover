@@ -3,6 +3,14 @@ import { Monster } from './Monster';
 interface CharacterInput {
   hit: number;
   aspd?: number;
+  STR: number;
+  AGI: number;
+  VIT: number;
+  INT: number;
+  DEX: number;
+  LUK: number;
+  name: string;
+  img: string;
 }
 
 interface IStatusPoint {

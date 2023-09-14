@@ -2,18 +2,19 @@
 
 import { Button, CharacterStatus, InputLabel, TitleHeader } from '@/components';
 import { CharacterSelectImage } from '@/components/';
+import { Character } from '@/entities/Character';
 import { Characters, useCharacters } from '@/hooks/useCharacters';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from 'react-icons/bs';
 
 export default function Select() {
   const [characterSelected, setCharacterSelected] = useState(0);
-  const { characters } = useCharacters();
+  const { character, characters } = useCharacters();
 
   for (let index = 0; characters.length < 3; index++) {
-    characters.push({} as Characters);
+    characters.push({} as Character);
   }
 
   function handlePrevCharacter() {
@@ -31,6 +32,7 @@ export default function Select() {
       setCharacterSelected(characterSelected + 1);
     }
   }
+
   return (
     <main className='relative flex h-screen w-full items-center justify-center bg-background-home bg-cover'>
       <form className='h-fit w-full max-w-[900px] overflow-hidden rounded bg-white drop-shadow-2xl'>
@@ -51,7 +53,7 @@ export default function Select() {
                 <CharacterSelectImage
                   key={index}
                   index={index}
-                  url={character.url}
+                  url={character.img}
                   isSelected={isSelected}
                   setCharacterSelected={setCharacterSelected}
                 />
@@ -70,18 +72,18 @@ export default function Select() {
             <div className='flex flex-col gap-[2px]'>
               <CharacterStatus state='Name' value={characters[characterSelected].name} />
               <CharacterStatus state='Job' value={characters[characterSelected].job} />
-              <CharacterStatus state='Lv.' value={characters[characterSelected].level} />
-              <CharacterStatus state='EXP' value={characters[characterSelected].exp} />
+              <CharacterStatus state='Lv.' value={characters[characterSelected].baseLv} />
+              <CharacterStatus state='EXP' value={characters[characterSelected].baseExp} />
               <CharacterStatus state='HP' value={characters[characterSelected].hp} />
               <CharacterStatus state='SP' value={characters[characterSelected].sp} />
             </div>
             <div className='flex flex-col gap-[2px]'>
-              <CharacterStatus state='STR' value={characters[characterSelected].str} />
-              <CharacterStatus state='AGI' value={characters[characterSelected].agi} />
-              <CharacterStatus state='VIT' value={characters[characterSelected].vit} />
-              <CharacterStatus state='INT' value={characters[characterSelected].int} />
-              <CharacterStatus state='DEX' value={characters[characterSelected].dex} />
-              <CharacterStatus state='LUK' value={characters[characterSelected].luk} />
+              <CharacterStatus state='STR' value={characters[characterSelected].statusPoint?.STR} />
+              <CharacterStatus state='AGI' value={characters[characterSelected].statusPoint?.AGI} />
+              <CharacterStatus state='VIT' value={characters[characterSelected].statusPoint?.VIT} />
+              <CharacterStatus state='INT' value={characters[characterSelected].statusPoint?.INT} />
+              <CharacterStatus state='DEX' value={characters[characterSelected].statusPoint?.DEX} />
+              <CharacterStatus state='LUK' value={characters[characterSelected].statusPoint?.LUK} />
             </div>
             <div className='absolute inset-0 -z-10 opacity-5'>
               <Image

@@ -20,6 +20,7 @@ export interface Characters {
 
 interface ContextProps {
   character: Character;
+  characters: Character[];
 }
 
 export const CharactersContext = createContext<ContextProps>({} as ContextProps);
@@ -29,9 +30,24 @@ export const CharactersContextProvider = ({
 }: {
   children: ReactNode;
 }): React.JSX.Element => {
-  const character: Character = new Character({ hit: 10, aspd: 99 });
+  const character: Character = new Character({
+    name: 'Vinha',
+    img: '/img/characters/noviceMan.png',
+    hit: 10,
+    STR: 1,
+    AGI: 1,
+    VIT: 1,
+    INT: 1,
+    DEX: 1,
+    LUK: 1,
+  });
+  const [characters, setCharacters] = useState<Character[]>([character]);
 
-  return <CharactersContext.Provider value={{ character }}>{children}</CharactersContext.Provider>;
+  return (
+    <CharactersContext.Provider value={{ character, characters }}>
+      {children}
+    </CharactersContext.Provider>
+  );
 };
 
 export const useCharacters = (): ContextProps => useContext(CharactersContext);

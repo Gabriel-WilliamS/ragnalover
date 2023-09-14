@@ -3,10 +3,9 @@
 import { Button, SetCharacterStatus, InputLabel, TitleHeader } from '@/components/index';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
-import { useCharacters } from '@/hooks/useCharacters';
 
 export default function CharacterInitial() {
   const [isMancharacterSelected, SetIsMancharacterSelected] = useState(true);
@@ -14,20 +13,8 @@ export default function CharacterInitial() {
   function tooogleCharacter() {
     SetIsMancharacterSelected(!isMancharacterSelected);
   }
-  const router = useRouter();
-  const { NUMBER_OF_CHARACTERS } = useCharacters();
 
-  function redirect() {
-    router.push('/character/select');
-  }
-
-  useEffect(() => {
-    if (NUMBER_OF_CHARACTERS >= 1) {
-      redirect();
-    }
-  }, [NUMBER_OF_CHARACTERS]);
-
-  return NUMBER_OF_CHARACTERS >= 1 ? (
+  return (
     <main className='relative flex h-screen w-full items-center justify-center bg-background-home bg-cover'>
       <form className='h-fit w-full max-w-[900px] overflow-hidden rounded bg-white drop-shadow-2xl'>
         <TitleHeader title='Character Select' />
@@ -140,7 +127,5 @@ export default function CharacterInitial() {
         </footer>
       </form>
     </main>
-  ) : (
-    <main className='relative flex h-screen w-full items-center justify-center bg-background-home bg-cover'></main>
   );
 }
