@@ -39,6 +39,9 @@ export class Character {
   jobLv: number;
   baseExp: number;
   jobExp: number;
+  baseMaxExp: number;
+  jobMaxExp: number;
+  soundBaseLvUpdate: Howl;
   job: string;
 
   private attackCooldown: number = 0;
@@ -83,34 +86,57 @@ export class Character {
       volume: 0.2,
       preload: true,
     });
+    this.soundBaseLvUpdate = new Howl({
+      src: ['/sounds/levelup.mp3'],
+      volume: 0.2,
+      preload: true,
+    });
     this.baseLv = 1;
     this.jobLv = 1;
     this.baseExp = 0;
     this.jobExp = 0;
+    this.baseMaxExp = 100;
+    this.jobMaxExp = 0;
     this.job = 'Novice';
   }
 
   calculateCooldown(aspd: number) {
     aspd = Math.max(1, Math.min(99, aspd));
 
-    this.attackCooldown = 500 - (aspd - 1) * 4;
+    this.attackCooldown = 500 - (aspd - 1) * 4.3;
   }
 
-  handleAttack(monster: Monster, setHistoryDamage: React.Dispatch<React.SetStateAction<number[]>>) {
+  handleAttack(setHistoryDamage: React.Dispatch<React.SetStateAction<number[]>>) {
     if (this.attackCooldown > 0) {
       return 0;
     }
-
     this.soundAttack.play();
-    monster.soundDamage.play();
 
     const damage = this.hit;
+    setHistoryDamage(oldDamage => [...oldDamage, damage]);
     this.calculateCooldown(this.aspd);
-
     setTimeout(() => {
       this.attackCooldown = 0;
     }, this.attackCooldown);
-    setHistoryDamage(oldDamage => [...oldDamage, damage]);
-    monster.handleDamage(damage);
+
+    return damage;
+  }
+
+  handleUpdatebaseLv() {
+    this.baseLv += 1;
+    this.soundBaseLvUpdate.play();
+  }
+
+  handleUpdateJobLv() {
+    this.jobLv += 1;
+  }
+
+  handleUpdateBaseExp(monsterXp: number) {
+    this.baseExp += monsterXp;
+    if (this.baseExp >= this.baseMaxExp) {
+      this.handleUpdatebaseLv();
+      this.baseExp = 0;
+      this.baseMaxExp += 10;
+    }
   }
 }

@@ -4,22 +4,66 @@ import { CharacterStatusBar } from '@/components';
 import { Window } from '@/components/Window/intex';
 import { useMapSounds } from '@/hooks/useMapSounds';
 import { useSoundBackground } from '@/hooks/useSoundBackground';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { MonsterRenderer } from '@/components/MonsterRenderer';
 import { Poring } from '@/monsters/poring';
 import { Fabre } from '@/monsters/Fabre';
-import { Character } from '@/entities/Character';
+import { Monster } from '@/entities/Monster';
+import { useCharacters } from '@/hooks/useCharacters';
 
 export default function Training() {
   const { initialMap } = useMapSounds();
   const { sound } = useSoundBackground();
   const [staps, setStaps] = useState(0);
-  const character: Character = new Character({ hit: 10, aspd: 5 });
+  const [monstersSpawned, setMonstersSpawned] = useState<Monster[]>([]);
+  const { character } = useCharacters();
   useEffect(() => {
     sound.stop();
+    monstersSpawned;
     if (initialMap.playing()) return;
     initialMap.play();
+    spawnMonster();
   }, []);
+  useEffect(() => {
+    if (monstersSpawned.length < 3) {
+      spawnMonster();
+    }
+  }, [monstersSpawned]);
+
+  function spawnMonster() {
+    const safeArea = {
+      left: window.innerWidth * 0.2,
+      top: window.innerHeight * 0.2,
+      right: window.innerWidth * 0.7,
+      bottom: window.innerHeight * 0.7,
+    };
+
+    const randomX = Math.random() * (safeArea.right - safeArea.left) + safeArea.left;
+    const randomY = Math.random() * (safeArea.bottom - safeArea.top) + safeArea.top;
+    const randomPosition = { x: randomX, y: randomY };
+
+    const monsterNearby = monstersSpawned.find(monster => {
+      const distance = Math.sqrt(
+        Math.pow(monster.position.x - randomPosition.x, 2) +
+          Math.pow(monster.position.y - randomPosition.y, 2)
+      );
+      return distance < 100;
+    });
+    if (monsterNearby) {
+      spawnMonster();
+      return;
+    }
+
+    const random = Math.random();
+    if (random <= 0.8) {
+      setMonstersSpawned(oldMonsters => [...oldMonsters, new Poring(randomPosition)]);
+      return;
+    }
+    if (random > 0.8) {
+      setMonstersSpawned(oldMonsters => [...oldMonsters, new Fabre(randomPosition)]);
+      return;
+    }
+  }
 
   return (
     <main className='relative flex h-screen w-full select-none'>
@@ -69,19 +113,35 @@ export default function Training() {
                 </div>
               </div>
 
-              <div className='w-full rounded-md bg-slate-100 px-3 py-1'>
-                <p>Base Lv. 1</p>
-                <p>Job Lv. 1</p>
+              <div className='flex w-full gap-2 rounded-md bg-slate-100 px-3 py-1'>
+                <div className='flex flex-col justify-between'>
+                  <p className='whitespace-nowrap'>Base Lv. {character.baseLv}</p>
+                  <p className='whitespace-nowrap'>Job Lv. 1</p>
+                </div>
+                <div className='flex w-full flex-col justify-evenly'>
+                  <CharacterStatusBar
+                    currentValue={character.baseExp}
+                    maxValue={character.baseMaxExp}
+                    type='experience'
+                  />
+                  <CharacterStatusBar currentValue={50} maxValue={50} type='experience' />
+                </div>
               </div>
             </div>
             <Window.Footer>
               <p>Weight: 0/0</p> <span>Zeny: 0</span>
             </Window.Footer>
           </Window.Root>
-          <div className='absolute left-1/2 top-1/2 z-10'>
-            <MonsterRenderer monster={new Poring()} character={character} />
-            <MonsterRenderer monster={new Fabre()} character={character} />
-          </div>
+          {monstersSpawned.length > 0
+            ? monstersSpawned.map(monster => (
+                <MonsterRenderer
+                  key={monster.id}
+                  monster={monster}
+                  character={character}
+                  setMonstersSpawned={setMonstersSpawned}
+                />
+              ))
+            : null}
         </>
       )}
     </main>

@@ -7,6 +7,7 @@ const barstyle = tv({
     color: {
       health: 'bg-gradient-to-b from-[#d3f0f4] via-[#a7bbf6] to-[#d3f0f4]',
       enemy: 'bg-gradient-to-l from-[#860909] via-[#ff3636] to-[#860909]',
+      experience: 'bg-[#567BC1]',
     },
   },
 });
@@ -16,7 +17,8 @@ const barstyle2 = tv({
   variants: {
     type: {
       health: 'w-[200px] rounded-full bg-gray-100',
-      enemy: 'w-[150px] h-[8px] bg-indigo-950 border border-zinc-950 text-zinc-300',
+      enemy: 'w-[80px] h-[8px] bg-indigo-950 border border-zinc-950 text-zinc-300',
+      experience: 'w-full h-[8px] bg-white border border-zinc-950 text-zinc-300',
     },
   },
 });

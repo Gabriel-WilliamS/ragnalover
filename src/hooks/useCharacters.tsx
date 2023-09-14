@@ -1,4 +1,5 @@
 'use client';
+import { Character } from '@/entities/Character';
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 export interface Characters {
@@ -18,9 +19,7 @@ export interface Characters {
 }
 
 interface ContextProps {
-  setCharacters: React.Dispatch<React.SetStateAction<Characters[]>>;
-  characters: Characters[];
-  NUMBER_OF_CHARACTERS: number;
+  character: Character;
 }
 
 export const CharactersContext = createContext<ContextProps>({} as ContextProps);
@@ -30,31 +29,9 @@ export const CharactersContextProvider = ({
 }: {
   children: ReactNode;
 }): React.JSX.Element => {
-  const [characters, setCharacters] = useState([
-    {
-      url: '/img/characters/noviceMan.png',
-      name: 'Vinha',
-      job: 'Novice',
-      level: '1',
-      exp: '0',
-      hp: '100',
-      sp: '50',
-      str: '1',
-      agi: '1',
-      vit: '1',
-      int: '1',
-      dex: '1',
-      luk: '1',
-    },
-  ]);
+  const character: Character = new Character({ hit: 10, aspd: 99 });
 
-  const NUMBER_OF_CHARACTERS = characters.length;
-
-  return (
-    <CharactersContext.Provider value={{ characters, setCharacters, NUMBER_OF_CHARACTERS }}>
-      {children}
-    </CharactersContext.Provider>
-  );
+  return <CharactersContext.Provider value={{ character }}>{children}</CharactersContext.Provider>;
 };
 
 export const useCharacters = (): ContextProps => useContext(CharactersContext);

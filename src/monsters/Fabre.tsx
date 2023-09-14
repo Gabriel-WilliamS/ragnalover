@@ -1,9 +1,9 @@
 import { Monster } from '@/entities/Monster';
 import { Howl } from 'howler';
 export class Fabre extends Monster {
-  constructor() {
+  constructor(position: { x: number; y: number }) {
     super({
-      id: 1,
+      id: Math.floor(Math.random() * 1000000),
       name: 'Fabre',
       img: '/img/monsters/1007-fabre.png',
       hp: 72,
@@ -16,9 +16,11 @@ export class Fabre extends Monster {
       }),
       soundDie: new Howl({
         src: ['/sounds/monsters/fabreDie.mp3'],
-        volume: 0.3,
+        volume: 0.8,
         preload: true,
       }),
+      position: position,
+      exp: 15,
     });
   }
 }

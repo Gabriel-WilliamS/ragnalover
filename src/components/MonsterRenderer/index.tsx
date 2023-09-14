@@ -1,31 +1,44 @@
 import { CharacterStatusBar } from '../CharacterStatusBar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { VT323 } from 'next/font/google';
 const vt323 = VT323({ weight: '400', subsets: ['latin'] });
 
 import { IMonsterRendererProps } from './types';
+import { Status } from '@/entities/Monster';
 
-export function MonsterRenderer({ monster, character }: IMonsterRendererProps) {
+export function MonsterRenderer({ monster, character, setMonstersSpawned }: IMonsterRendererProps) {
   const [historyDamage, setHistoryDamage] = useState<number[]>([]);
-  const [monsterStatus, setMonsterStatus] = useState<'idle' | 'attack' | 'die'>('idle');
+  const [monsterStatus, setMonsterStatus] = useState<Status>('idle');
+
   function handleAttack() {
-    setMonsterStatus('idle');
-    character.handleAttack(monster, setHistoryDamage);
-    if (monster.status === 'die') {
+    const damage = character.handleAttack(setHistoryDamage);
+    monster.handleDamage(damage, setHistoryDamage);
+
+    if (monster.handleVerifyDie()) {
       setMonsterStatus('die');
-      monster.soundDie.play();
-      monster.handleRespawn();
+      character.handleUpdateBaseExp(monster.exp);
+
+      setTimeout(() => {
+        setMonstersSpawned(oldMonsters =>
+          oldMonsters.filter(oldMonster => oldMonster.id !== monster.id)
+        );
+      }, 200);
     }
   }
 
   return (
     <div
-      className={`relative flex cursor-attack select-none flex-col items-center gap-2 rounded-full p-10 ${
+      className={`absolute flex cursor-attack select-none flex-col items-center gap-2 rounded-full p-10 ${
         monsterStatus === 'die' && 'animate-death'
       }`}
+      style={{ left: monster.position.x, top: monster.position.y }}
       onClick={handleAttack}
     >
-      <img src={monster.img} alt='ground' className='w-[80px]' />
+      <img
+        src={monster.img}
+        alt='ground'
+        className={`w-[60px] ${monster.status === 'attack' && 'animate-mosterAttack'}`}
+      />
       {historyDamage.map((damage, index) => (
         <div
           key={index}

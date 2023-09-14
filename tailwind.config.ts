@@ -31,6 +31,15 @@ const config: Config = {
             'pointer-events': 'auto',
           },
         },
+        mosterAttack: {
+          from: {
+            transform: 'scale(0)',
+          },
+          to: {
+            transform: 'scale(2)',
+            'pointer-events': 'none',
+          },
+        },
         damage: {
           from: {
             transform: 'translateY(0px)',
@@ -38,7 +47,7 @@ const config: Config = {
             'pointer-events': 'none',
           },
           to: {
-            transform: 'translateY(-200px)',
+            transform: 'translateY(-200px) ',
             opacity: '0',
             'pointer-events': 'auto',
           },
@@ -47,6 +56,7 @@ const config: Config = {
       animation: {
         death: 'death 0.4s ease-in-out',
         damage: 'damage 0.4s ease-in-out both',
+        mosterAttack: 'mosterAttack 0.4s ease-in-out both',
       },
       cursor: {
         pointer: 'url(/img/cursor/pointer.webp), pointer',
